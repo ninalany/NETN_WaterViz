@@ -28,8 +28,8 @@ shinyServer(function(input,output){
   
   output$VarResults <- renderUI({ 
     # dynamically select parm based on location type. This will cause the UI to update 
-    df_sub<-subset(df, SiteName %in% input$site) # & Type %in% input$loc
-  selectInput(inputId='parm', label='Select variable to plot', choices=unique(df_sub$DisplayName), selected = "Dissolved Oxygen")
+    df_sub<-subset(df,  LongName %in% input$park & Type %in% input$loc & SiteName %in% input$site) # & Type %in% input$loc
+  selectInput(inputId='parm', label='Select variable to plot', choices=unique(df_sub$DisplayName), selected = "Water Temperature")
   })
   
 
@@ -42,7 +42,7 @@ shinyServer(function(input,output){
       
 
 DataSurf <- reactive({
-  subset(DataTot(), SampleDepth == "epilimnion" | SampleDepth == "stream")  
+  subset(DataTot(), SampleDepth == "epilimnion" | SampleDepth == "stream" | is.na(SampleDepth))  
   
 })
       
