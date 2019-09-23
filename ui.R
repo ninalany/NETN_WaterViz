@@ -66,6 +66,52 @@ choices=c("None", "Theil-Sen (NOT deseasoned)", "Theil-Sen (deseasoned)", "Akrit
   )
   ), #end navbarPage
 
+######################################### Depth Profile Panel ####################################################################
+
+tabPanel(title="Plot Depth Profile",
+         #style="padding: 0",
+         useShinyjs(),
+         div(class="outer",
+             tags$head(HTML('<link rel="icon", href="AH_small_flat_4C_12x16.png", type="image/png" />'))
+         ),
+         
+         fluidPage(
+           sidebarPanel(
+             h2("Plot depth profile"),
+             br(),
+             
+             #Park selection
+             tags$div(title="Choose the park you want to work with",selectInput(inputId='parkB', label='Select Park', choices= c("Acadia National Park",
+                                                                                                                                "Marsh-Billings-Rockefeller National Historical Park",
+                                                                                                                                "Weir Farm National Historic Site"), selectize = TRUE)),
+             
+             
+             # Site selection
+             uiOutput("SiteResultsB"),
+             
+             #Variable selection
+             selectInput(inputId='parmC', label='Select variable to plot', choices=c("Water Temperature", 
+                                                                                    "pH", "Dissolved Oxygen","Dissolved Oxygen (percent)","Specific Conductance",
+                                                                                    "Light Penetration Ratio"), selected = "Light Penetration Ratio"),
+             # time selection
+             
+             
+             
+             br(),
+             
+             br(),
+             p("For further information about this sampling protocol, visit the ", 
+               a("NETN protocol page.", href= "https://science.nature.nps.gov/im/units/netn/monitor/programs/lakesPonds/lakesPonds.cfm")),
+             br()
+           ),
+           
+           mainPanel(plotOutput("plot3",  height= "800", width ="600")
+                     
+           )
+           
+         )
+),
+
 ######################################### Sampling Effort Panel ####################################################################
 
 tabPanel(title="Sampling Effort",
