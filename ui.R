@@ -40,13 +40,11 @@ fluidPage(
 #    tags$div(title="Choose the variable you want to plot",selectInput(inputId='parm', label='Select variable to plot', choices=  DisplayVarList)),
     uiOutput("VarResults"),
     
-    ##Add in options
-    
-#    tags$div(title="Plot Type ",selectInput(inputId='plottype', label='Plot type',choices=c("Time Series", "Histogram", "Box Plot (monthly)"), selected = "Time Series")),
-#    tags$div(title="Add a trend line ", conditionalPanel(condition = "input.plottype == 'Time Series'",checkboxInput(inputId='trend', label='Add Linear trend line', value=FALSE))),
-#    tags$div(title="Binwidth control ", conditionalPanel(condition = "input.plottype == 'Histogram'",sliderInput(inputId='binwidth', label='Binwidth', value=.1, min= 0, max= 1, step = .10))),
-#    tags$div(title="Plot on log-scale ", checkboxInput(inputId='logscale', label='Convert value to log-scale', value=FALSE)),
-    
+  ##Add in options for calculating trend
+  tags$div(title="Calculate Trend",selectInput(inputId='trendType', 
+                                               label='Select trend analysis method',
+choices=c("None", "Theil-Sen (NOT deseasoned)", "Theil-Sen (deseasoned)", "Akritas-Theil-Sen (for censored data)"), selected = "None")),
+
     br(),
 
     #downloadButton('downloadData', 'Download Data'),
@@ -58,7 +56,9 @@ fluidPage(
     br()
     ),
     
-    mainPanel(plotOutput("plot",  width = "100%")
+    mainPanel(plotOutput("plot", height = 400, width = 800), 
+              
+              tableOutput("modelout")
     
               
                         )
