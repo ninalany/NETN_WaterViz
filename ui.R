@@ -40,9 +40,10 @@ fluidPage(
 #    tags$div(title="Choose the variable you want to plot",selectInput(inputId='parm', label='Select variable to plot', choices=  DisplayVarList)),
     uiOutput("VarResults"),
     
-    ##Add in options for calculating trend
-    tags$div(title="Calculate Trend",selectInput(inputId='trendType', label='Select trend analysis method',choices=c("None", "Theil-Sen (deseasoned)", "Theil-Sen (NOT deseasoned)", "Akritas-Theil-Sen (for censored data)"), selected = "None")),
-    
+  ##Add in options for calculating trend
+  tags$div(title="Calculate Trend",selectInput(inputId='trendType', 
+                                               label='Select trend analysis method',
+choices=c("None", "Theil-Sen (NOT deseasoned)", "Theil-Sen (deseasoned)", "Akritas-Theil-Sen (for censored data)"), selected = "None")),
     br(),
 
     #downloadButton('downloadData', 'Download Data'),
@@ -54,7 +55,9 @@ fluidPage(
     br()
     ),
     
-    mainPanel(plotOutput("plot",  width = "100%")
+    mainPanel(plotOutput("plot", height = 400, width = 800), 
+              
+              tableOutput("modelout")
     
               
                         )
