@@ -67,40 +67,40 @@ DataSurf <- reactive({
               ylab = unit,
               main = input$parm
               )
-
-      #' calculate trend WITH deseason  
-      #' out <- TheilSen(mydata = data, pollutant = "value", deseason = TRUE)
+    # calculate trend WITH deseason
+if(input$trendType == "Theil-Sen (deseasoned"){
+        
+       out <- TheilSen(mydata = data.to.plot, pollutant = "value", deseason = TRUE)
       
-      #' #add trend line to plot:
-      #' slope <- mean(out$data$main.data$slope, na.rm=T)
-      #' int <- mean(out$data$main.data$intercept, na.rm=T)
-      #' line.type <- ifelse(mean(out$data$main.data$p, na.rm=T) <= 0.05, 1, 2)
+      #add trend line to plot:
+       slope <- mean(out$data$main.data$slope, na.rm=T)
+       int <- mean(out$data$main.data$intercept, na.rm=T)
+       line.type <- ifelse(mean(out$data$main.data$p, na.rm=T) <= 0.05, 1, 2)
       #' #'openair' TheilSen assumes intercept is at "1970/1/1"
-      #' ex <- seq(as.Date(min(data$Visit.Start.Date)), as.Date(max(data$Visit.Start.Date)), "years"#)
-      #' why <- int + slope*(as.numeric(format(ex, '%Y'))-1970)
-      #' p <- (p + points(ex, why, lty = line.type, type = "l", lwd = 2))
-      #'     
+       ex <- seq(as.Date(min(data.to.plot$Visit.Start.Date)), as.Date(max(data.to.plot$Visit.Start.Date)), "years")
+       why <- int + slope*(as.numeric(format(ex, '%Y'))-1970)
+       p <- (p + points(ex, why, lty = line.type, type = "l", lwd = 2))
       
-      #output text
-      # main = paste0("m = ",round(mean(out$data$main.data$slope, na.rm=T),2),"[",round(mean(out$data$main.data$lower, na.rm=T),2),",",round(mean(out$data$main.data$upper, na.rm=T),2),"], p = ",round(mean(out$data$main.data$p, na.rm=T),2))
-      
-      #' calculate trend WITHOUT deseason  
-      #' out2 <- TheilSen(mydata = data, pollutant = "value", deseason = FALSE)
-      
-      #' #add trend line to plot:
-      #' slope <- mean(out2$data$main.data$slope, na.rm=T)
-      #' int <- mean(out2$data$main.data$intercept, na.rm=T)
-      #' line.type <- ifelse(mean(out2$data$main.data$p, na.rm=T) <= 0.05, 1, 2)
-      #' #'openair' TheilSen assumes intercept is at "1970/1/1"
-      #' ex <- seq(as.Date(min(data$Visit.Start.Date)), as.Date(max(data$Visit.Start.Date)), "years")
-      #' why <- int + slope*(as.numeric(format(ex, '%Y'))-1970)
-      #' p <- (p + points(ex, why, lty = line.type, type = "l", lwd = 2))
-      #'     
-      
-      #output text
-      # main = paste0("m = ",round(mean(out2$data$main.data$slope, na.rm=T),2),"[",round(mean(out2$data$main.data$lower, na.rm=T),2),",",round(mean(out2$data$main.data$upper, na.rm=T),2),"], p = ",round(mean(out2$data$main.data$p, na.rm=T),2))
- 
-      
+}
+    
+    #output text
+    # main = paste0("m = ",round(mean(out$data$main.data$slope, na.rm=T),2),"[",round(mean(out$data$main.data$lower, na.rm=T),2),",",round(mean(out$data$main.data$upper, na.rm=T),2),"], p = ",round(mean(out$data$main.data$p, na.rm=T),2))
+    
+    #' calculate trend WITHOUT deseason  
+    #' out2 <- TheilSen(mydata = data, pollutant = "value", deseason = FALSE)
+    
+    #' #add trend line to plot:
+    #' slope <- mean(out2$data$main.data$slope, na.rm=T)
+    #' int <- mean(out2$data$main.data$intercept, na.rm=T)
+    #' line.type <- ifelse(mean(out2$data$main.data$p, na.rm=T) <= 0.05, 1, 2)
+    #' #'openair' TheilSen assumes intercept is at "1970/1/1"
+    #' ex <- seq(as.Date(min(data$Visit.Start.Date)), as.Date(max(data$Visit.Start.Date)), "years")
+    #' why <- int + slope*(as.numeric(format(ex, '%Y'))-1970)
+    #' p <- (p + points(ex, why, lty = line.type, type = "l", lwd = 2))
+    #'     
+    
+    #output text
+    # main = paste0("m = ",round(mean(out2$data$main.data$slope, na.rm=T),2),"[",round(mean(out2$data$main.data$lower, na.rm=T),2),",",round(mean(out2$data$main.data$upper, na.rm=T),2),"], p = ",round(mean(out2$data$main.data$p, na.rm=T),2))  
        print(p)}, height = 600, width = 800)
    
 
