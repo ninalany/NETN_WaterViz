@@ -25,7 +25,7 @@ tabPanel(title="Plot time series",
          
 fluidPage(
   sidebarPanel(
-    h1("Plot time series from each sampled site."),
+    h1("Plot time series of observations."),
     br(),
     #Park selection
     tags$div(title="Choose the park you want to work with",selectInput(inputId='park', label='Select Park', choices= ParkNameList, selectize = TRUE)),
@@ -44,7 +44,6 @@ fluidPage(
   tags$div(title="Calculate Trend",selectInput(inputId='trendType', 
                                                label='Select trend analysis method',
 choices=c("None", "Theil-Sen (NOT deseasoned)", "Theil-Sen (deseasoned)", "Akritas-Theil-Sen (for censored data)"), selected = "None")),
-
     br(),
 
     #downloadButton('downloadData', 'Download Data'),
