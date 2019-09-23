@@ -13,11 +13,13 @@ library(magrittr)
 
 library(tidyverse)
 library(openair)
+source("~/R/NETN/NETN_Water/2019 Nina Lany MSU/2_NETN_water_functions.R")
+
 ##### Begin Server Function ####
 
 shinyServer(function(input,output){
   
-#################### Time series planel ##############################################
+#################### Time series panel ##############################################
 ###################### Create set of reactive selection boxes in UI  ####################
   ### select site based on park
   output$SiteResultsA <- renderUI({ 
@@ -163,6 +165,35 @@ output$modelout <- renderTable({
   
   
   })
+
+
+#################### Depth profile panel ##############################################
+###################### Create set of reactive selection boxes in UI  ####################
+### select site based on park
+output$SiteResultsB <- renderUI({ 
+  
+  df_sub<-subset(df, LongName %in% input$parkB & Type %in% "Lake")    
+  selectInput(inputId='siteA', label='Select Site',  choices = unique(df_sub$SiteName))
+})
+
+
+output$plot3<- renderPlot({
+  
+  DataTot <- reactive({ 
+    subset(df, LongName %in% input$parkB) %>% 
+      filter(!SampleDepth %in% "epilimnion" | !SampleDepth %in% "stream" | !is.na(SampleDepth))
+  })
+  
+ 
+  p<-plot.depth.profile(data=DataTot() , location= input$siteA, variable = input$parmC, months=4:10, years=min(data$Year):max(data$Year), add.legend = F)
+  
+  print(p)
+  
+}
+  
+)
+
+
 
 
   ##################################### Sampling Effort plot panel ###################
