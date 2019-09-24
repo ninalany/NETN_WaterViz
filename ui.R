@@ -129,6 +129,10 @@ tabPanel(title="Sampling Effort",
            sidebarPanel(
              h2("Visualize sampling effort."),
              br(),
+             
+             #Park selection
+             tags$div(title="Choose the park you want to work with",selectInput(inputId='parkC', label='Select Park', choices= ParkNameList)),
+                                                                                                                                 
  
             #Location Type selection
              tags$div(title="Choose site type",radioButtons(inputId='locB', label='Select Stream or Lake/Pond', choices= c("Stream","Lake"), selected = "Stream")),
