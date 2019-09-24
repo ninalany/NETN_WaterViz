@@ -212,6 +212,35 @@ output$modelout <- renderTable({
       select(Month, !!unitsLab := Slope, P, Intercept)
   }
   
+  else if(input$trendType == "Akritas-Theil-Sen (for censored data)" ){
+
+    #data:
+    data.to.plot <- DataGraph()
+    data.to.plot <- data.to.plot[order(data.to.plot$date),]
+
+    #Fit model
+    data.to.plot <- data.to.plot %>%
+      mutate(ycen = ifelse(data.to.plot$Result.Value.Text == "*Present <QL", TRUE, FALSE))
+    #create vector of julian date (days since 1970-01-01) and divide by 365 (a very slight approximatin in leap years) so that the slope units are in units per year.
+    data.to.plot$year.dec <- julian(data.to.plot$Visit.Start.Date)/365
+    #run analysis
+    out <- cenken(y = data.to.plot$value, ycen = data.to.plot$ycen, x = data.to.plot$year.dec)
+
+    #output text from model fit
+    unitsLab<- ifelse(is.na(DataGraph()$Units[1]), "Slope (units/ year)",
+                      paste0("Slope (",DataGraph()$Units[1],"/year)"))
+
+    table1 <- t(as.matrix(out)) 
+    class(table1) <- "matrix"
+    as.data.frame(table1) %>%
+      rename(Slope =slope,
+             P = p, 
+             Intercept= intercept) %>%
+      add_column(Month = "Overall") %>%
+      dplyr::select(Month, !!unitsLab := Slope, P, Intercept)
+
+
+  }
   
   }, caption = "Model results for selected trend test",
   caption.placement = getOption("xtable.caption.placement", "top"), 
