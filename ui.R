@@ -39,6 +39,10 @@ fluidPage(
     # Parameter selection
 #    tags$div(title="Choose the variable you want to plot",selectInput(inputId='parm', label='Select variable to plot', choices=  DisplayVarList)),
     uiOutput("VarResults"),
+
+    # Year selection
+    uiOutput("yearControl"),
+    
     
   ##Add in options for calculating trend
   tags$div(title="Calculate Trend",selectInput(inputId='trendType', 

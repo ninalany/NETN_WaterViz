@@ -35,6 +35,14 @@ shinyServer(function(input,output){
   selectInput(inputId='parm', label='Select variable to plot', choices=unique(df_sub$DisplayName), selected = "Water Temperature")
   })
   
+  # year control
+  
+  output$yearControl<-renderUI({
+    
+    sliderInput(inputId="YearsShow", label= "Years to Display:", min=min(DataSurf()$Year, na.rm=T),  max=max(DataSurf()$Year, na.rm=T),
+                value=c( min(DataSurf()$Year,na.rm=T), max=max(DataSurf()$Year,na.rm=T) ), sep=""
+    )
+  })
 
 #######################################################   
 ### time series plot
@@ -49,6 +57,8 @@ DataSurf <- reactive({
   
 })
       
+DataGraph<-reactive({DataSurf()[DataSurf()$Year>=input$YearsShow[1] & DataSurf()$Year<=input$YearsShow[2],]})
+
 output$plot <- renderPlot({
   #check for data
   if(nrow(DataSurf())== 0){
@@ -57,7 +67,7 @@ output$plot <- renderPlot({
   
   
   #make base plot:
-  data.to.plot <- DataSurf()
+  data.to.plot <- DataGraph()
   data.to.plot <- data.to.plot[order(data.to.plot$date),]
   unit <- unique(data.to.plot$Units)
   p <- plot(data.to.plot$Visit.Start.Date, data.to.plot$value,

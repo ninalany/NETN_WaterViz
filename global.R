@@ -16,7 +16,7 @@ df <- merge(df, md, by = c("StationID", "Local.Characteristic.Name"), all.x=T, a
 #make some necessary columns
 df$date<-as.POSIXct(df$Visit.Start.Date,  format= "%m/%d/%y") #required format and colname for openair::TheilSen
 df$Visit.Start.Date <- as.Date(df$Visit.Start.Date, format= "%m/%d/%y")
-df$Year<-as.numeric(format(df$Visit.Start.Date,"%y"))#extract Year
+df$Year<-as.numeric(format(df$Visit.Start.Date,"%Y"))#extract Year
 df$Month <- as.numeric(format(df$Visit.Start.Date, "%m")) #extract month
 
 #make separate symbols and colors for values below quantification limit         
