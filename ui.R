@@ -96,7 +96,7 @@ tabPanel(title="Plot Depth Profile",
              #Variable selection
              selectInput(inputId='parmC', label='Select variable to plot', choices=c("Water Temperature", 
                                                                                     "pH", "Dissolved Oxygen","Dissolved Oxygen (percent)","Specific Conductance",
-                                                                                    "Light Penetration Ratio"), selected = "Light Penetration Ratio"),
+                                                                                    "Light Penetration Ratio"), selected = "Water Temperature"),
              
              # Year selection
              uiOutput("yearControlB"),
@@ -105,7 +105,7 @@ tabPanel(title="Plot Depth Profile",
              uiOutput("monthControlB"),
              
              #legend selection
-             checkboxInput(inputId='legend', label='Include Legend', value = FALSE),
+             checkboxInput(inputId='legend', label='Include Legend', value = TRUE),
              
              # time selection
              

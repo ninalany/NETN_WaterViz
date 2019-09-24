@@ -13,6 +13,7 @@ library(magrittr)
 
 library(tidyverse)
 library(openair)
+library(NADA)
 source("./functions/plot.depth.profile.R")
 
 ##### Begin Server Function ####
@@ -100,7 +101,7 @@ output$plot <- renderPlot({
   }
 
   # calculate trend WITHOUT deseason
-  if(input$trendType == "Theil-Sen (NOT deseasoned)"){
+  else if(input$trendType == "Theil-Sen (NOT deseasoned)"){
     
     out <- TheilSen(mydata = data.to.plot, pollutant = "value", deseason = FALSE, plot=FALSE)
     
@@ -112,6 +113,36 @@ output$plot <- renderPlot({
     ex <- seq(as.Date(min(data.to.plot$Visit.Start.Date)), as.Date(max(data.to.plot$Visit.Start.Date)), "years")
     why <- int + slope*(as.numeric(format(ex, '%Y'))-1970)
     p <- (p + points(ex, why, lty = line.type, type = "l", lwd = 2))
+    
+    print(p)
+    
+  }
+  
+  # calculate trend for censored data
+  else if(input$trendType == "Akritas-Theil-Sen (for censored data)"){
+
+    #create vector to indicate which observations are censored:
+    data.to.plot <- data.to.plot %>%
+      mutate(ycen = ifelse(data.to.plot$Result.Value.Text == "*Present <QL", TRUE, FALSE))
+    #create vector of julian date (days since 1970-01-01) and divide by 365 (a very slight approximatin in leap years) so that the slope units are in units per year.
+    data.to.plot$year.dec <- julian(data.to.plot$Visit.Start.Date)/365
+    #run analysis
+    out <- cenken(y = data.to.plot$value, ycen = data.to.plot$ycen, x = data.to.plot$year.dec)
+    
+    #add trend line to plot:
+    p <- plot(data.to.plot$year.dec + 1970, data.to.plot$value,
+              bty = "c", 
+              type = "o", 
+              pch = data.to.plot$plotting.symbol, 
+              cex = 2,
+              col = data.to.plot$plotting.color, 
+              xlab = "Date", 
+              ylab = unit,
+              main = input$parm)
+    line.type <- ifelse(out$p <= 0.05, 1, 2)
+    ex <- seq(min(data.to.plot$year.dec), max(data.to.plot$year.dec), 0.1)
+    why <- out$intercept + out$slope*(ex)
+    p <- (p + points(ex+1970, why, lty = line.type, type = "l"))
     
     print(p)
     
