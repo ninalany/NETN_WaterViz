@@ -15,6 +15,7 @@ library(tidyverse)
 library(openair)
 library(NADA)
 source("./functions/plot.depth.profile.R")
+source("./functions/plot.sampling.effort.R")
 
 ##### Begin Server Function ####
 
@@ -310,31 +311,14 @@ output$plot3<- renderPlot({
   })
   
   ###plot
-  output$plot2 <- renderPlot({
+output$plot2 <- renderPlot({
 
-      # select by site and parms
-      data2<-subset(df, LongName %in% input$parkC & Type %in% input$locB & DisplayName %in% input$parmB)
-    
-      # Create color palette for heatmaps
-      heat.pal.spectral <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
-      #Calculate number of visits per year
-      temp <- data2 %>%
-        group_by(StationID, Year) %>%
-        dplyr::summarize(n.samps = length(unique(Visit.Start.Date))) %>%
-        ungroup()
-      #Plot spatio-temporal sampling effort	
-      p2 <- (ggplot(data = temp, aes(x = Year, y = StationID, fill = n.samps)) +
-              geom_raster() +
-              scale_fill_gradientn(colours = heat.pal.spectral(100), name = "Visits") +
-              theme_bw() +
-              xlab("Year") +
-              ylab("Site") +
-              theme(aspect.ratio = 1, axis.text.x = element_text(angle = 90),  text = element_text(size = 14)))
-  
+    p2 <- plot.sampling.effort(data = df, park = input$parkC, type = input$locB, variable = input$parmB)
 
-      print(p2)
-    
-  }
+    print(p2)
+
+}
+
   , height = 600, width = 800)
   
   
