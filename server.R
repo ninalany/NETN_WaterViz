@@ -135,7 +135,8 @@ output$modelout <- renderTable({
     
     #output text from model fit
     
-    unitsLab<- paste0("Slope (",DataGraph()$Units[1],"/year)")
+    unitsLab<- ifelse(is.na(DataGraph()$Units[1]), "Slope (units/ year)",
+                      paste0("Slope (",DataGraph()$Units[1],"/year)"))
     
     as.tibble(out2$data$main.data) %>%
       summarise(Slope =  round(mean(slope, na.rm=T),2),
@@ -173,7 +174,8 @@ output$modelout <- renderTable({
       select(Month= month, P = p, Slope = slope, Intercept= intercept) %>% 
       mutate(Slope =round(Slope, 2),P = round(P,3), Intercept =round(Intercept,2))
              
-    unitsLab<- paste0("Slope (",DataGraph()$Units[1],"/year)")
+    unitsLab<- ifelse(is.na(DataGraph()$Units[1]), "Slope (units/ year)",
+                      paste0("Slope (",DataGraph()$Units[1],"/year)"))
     
     bind_rows(overall,months) %>% 
       select(Month, !!unitsLab := Slope, P, Intercept)
