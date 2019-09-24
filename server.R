@@ -13,7 +13,7 @@ library(magrittr)
 
 library(tidyverse)
 library(openair)
-source("./functions/2_NETN_water_functions.R")
+source("./functions/plot.depth.profile.R")
 
 ##### Begin Server Function ####
 
@@ -205,7 +205,7 @@ output$plot3<- renderPlot({
   })
   
  
-  p<-plot.depth.profile(data=DataTot() , location= input$siteA, variable = input$parmC, months=4:10, years=min(data$Year):max(data$Year), add.legend = F)
+  p<-plot.depth.profile(data=DataTot() , location= input$siteA, variable = input$parmC, months=4:10, years=min(data$Year):max(data$Year), add.legend = input$legend)
   
   print(p)
   
