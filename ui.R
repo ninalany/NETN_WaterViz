@@ -98,6 +98,12 @@ tabPanel(title="Plot Depth Profile",
                                                                                     "pH", "Dissolved Oxygen","Dissolved Oxygen (percent)","Specific Conductance",
                                                                                     "Light Penetration Ratio"), selected = "Light Penetration Ratio"),
              
+             # Year selection
+             uiOutput("yearControlB"),
+             
+             # Month selection
+             uiOutput("monthControlB"),
+             
              #legend selection
              checkboxInput(inputId='legend', label='Include Legend', value = FALSE),
              

@@ -13,6 +13,7 @@ plot.depth.profile <- function (data, location, variable, months=4:10, years=min
     mutate(SampleDepth = as.numeric(SampleDepth)) %>%
     mutate(SampleDepth = plyr::round_any(SampleDepth, 1)) %>%
     mutate(Result.Value.Text = as.numeric(Result.Value.Text))
+  temp <- temp[order(temp$Visit.Start.Date),]
   temp2 <- temp %>%
     group_by(SampleDepth) %>%
     dplyr::summarize(Median.Value = median(Result.Value.Text)) %>%

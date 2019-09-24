@@ -194,18 +194,40 @@ output$SiteResultsB <- renderUI({
   
   df_sub<-subset(df, LongName %in% input$parkB & Type %in% "Lake")    
   selectInput(inputId='siteA', label='Select Site',  choices = unique(df_sub$SiteName))
+  
+  
+})
+
+# year control
+
+output$yearControlB<-renderUI({
+  
+  sliderInput(inputId="YearsShowB", label= "Years to Display:", min=min(DataTot()$Year, na.rm=T),  max=max(DataTot()$Year, na.rm=T),
+              value=c(min(DataTot()$Year,na.rm=T), max=max(DataTot()$Year,na.rm=T) ), sep=""
+  )
+})
+
+# month control
+
+output$monthControlB<-renderUI({
+  
+  sliderInput(inputId="MonthsShowB", label= "Months to Display:", min=min(DataTot()$Month, na.rm=T),  max=max(DataTot()$Month, na.rm=T),
+              value=c(min(DataTot()$Month,na.rm=T), max=max(DataTot()$Month,na.rm=T) ), sep=""
+  )
 })
 
 
+#make plot
 output$plot3<- renderPlot({
   
   DataTot <- reactive({ 
     subset(df, LongName %in% input$parkB) %>% 
       filter(!SampleDepth %in% "epilimnion" | !SampleDepth %in% "stream" | !is.na(SampleDepth))
   })
-  
- 
-  p<-plot.depth.profile(data=DataTot() , location= input$siteA, variable = input$parmC, months=4:10, years=min(data$Year):max(data$Year), add.legend = input$legend)
+
+  selectedYears <- input$YearsShowB[1]:input$YearsShowB[2]
+  selectedMonths <- input$MonthsShowB[1]:input$MonthsShowB[2]  
+  p<-plot.depth.profile(data=DataTot() , location= input$siteA, variable = input$parmC, months=selectedMonths, years=selectedYears, add.legend = input$legend)
   
   print(p)
   
