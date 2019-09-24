@@ -61,7 +61,7 @@ DataGraph<-reactive({DataSurf()[DataSurf()$Year>=input$YearsShow[1] & DataSurf()
 
 output$plot <- renderPlot({
   #check for data
-  if(nrow(DataSurf())== 0){
+  if(nrow(DataGraph())== 0){
     stop("Sorry, this variable has not been collected at this site.")
   }
   
@@ -71,7 +71,7 @@ output$plot <- renderPlot({
   data.to.plot <- data.to.plot[order(data.to.plot$date),]
   unit <- unique(data.to.plot$Units)
   p <- plot(data.to.plot$Visit.Start.Date, data.to.plot$value,
-            bty = "l", 
+            bty = "c", 
             type = "o", 
             pch = data.to.plot$plotting.symbol, 
             cex = 2,
@@ -125,7 +125,7 @@ output$modelout <- renderTable({
   if(input$trendType == "Theil-Sen (NOT deseasoned)" ){
     
     #make base plot:
-    data.to.plot <- DataSurf()
+    data.to.plot <- DataGraph()
     data.to.plot <- data.to.plot[order(data.to.plot$date),]
     
     #Fit model
@@ -135,19 +135,24 @@ output$modelout <- renderTable({
     
     #output text from model fit
     
+    unitsLab<- paste0("Slope (",DataGraph()$Units[1],"/year)")
+    
     as.tibble(out2$data$main.data) %>%
-      summarise(Slope=  round(mean(slope, na.rm=T),2),
+      summarise(Slope =  round(mean(slope, na.rm=T),2),
                 P = round(mean(p, na.rm=T),3),
                 Intercept= round(mean(intercept, na.rm=T),2)) %>%
       add_column(Month = "Overall") %>%
-      select(Month, Slope, P, Intercept)
+      dplyr::select(Month, !!unitsLab := Slope, P, Intercept)
+    
+      # colnames(slopes)[which(colnames(slopes)=="Slope")]= unitsLab
+   
     
   }
   
-  if(input$trendType == "Theil-Sen (deseasoned)"){
+  else if(input$trendType == "Theil-Sen (deseasoned)"){
 
     #make base plot:
-    data.to.plot <- DataSurf()
+    data.to.plot <- DataGraph()
     data.to.plot <- data.to.plot[order(data.to.plot$date),]
     
     #Fit seasonal model
@@ -168,13 +173,16 @@ output$modelout <- renderTable({
       select(Month= month, P = p, Slope = slope, Intercept= intercept) %>% 
       mutate(Slope =round(Slope, 2),P = round(P,3), Intercept =round(Intercept,2))
              
+    unitsLab<- paste0("Slope (",DataGraph()$Units[1],"/year)")
     
     bind_rows(overall,months) %>% 
-      select(Month, Slope, P, Intercept)
+      select(Month, !!unitsLab := Slope, P, Intercept)
   }
   
   
-  })
+  }, caption = "Model results for selected trend test",
+  caption.placement = getOption("xtable.caption.placement", "top"), 
+  caption.width = getOption("xtable.caption.width", NULL))
 
 
 #################### Depth profile panel ##############################################
@@ -221,7 +229,7 @@ output$plot3<- renderPlot({
   output$plot2 <- renderPlot({
 
       # select by site and parms
-      data2<-subset(df, Type %in% input$locB & DisplayName %in% input$parmB)
+      data2<-subset(df, LongName %in% input$parkC & Type %in% input$locB & DisplayName %in% input$parmB)
     
       # Create color palette for heatmaps
       heat.pal.spectral <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
@@ -237,7 +245,7 @@ output$plot3<- renderPlot({
               theme_bw() +
               xlab("Year") +
               ylab("Site") +
-              theme(aspect.ratio = 1, axis.text.x = element_text(angle = 90),  text = element_text(size = 9)))
+              theme(aspect.ratio = 1, axis.text.x = element_text(angle = 90),  text = element_text(size = 14)))
   
 
       print(p2)
