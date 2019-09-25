@@ -47,7 +47,16 @@ fluidPage(
   ##Add in options for calculating trend
   tags$div(title="Calculate Trend",selectInput(inputId='trendType', 
                                                label='Select trend analysis method',
-choices=c("None", "Theil-Sen (NOT deseasoned)", "Theil-Sen (deseasoned)", "Akritas-Theil-Sen (for censored data)"), selected = "None")),
+    choices=c("None", "Theil-Sen (NOT deseasoned)", "Theil-Sen (deseasoned)", "Akritas-Theil-Sen (for censored data)"), selected = "None")),
+    
+  conditionalPanel(
+    condition = "input.trendType == 'Theil-Sen (NOT deseasoned)'",
+    radioButtons(inputId='TheilSenPlot', label ="Plot type", selected= "Line Plot",choices= c("Line Plot", "Theil-Sen plot"))),
+
+  conditionalPanel(
+    condition = "input.trendType == 'Theil-Sen (deseasoned)'",
+    radioButtons(inputId='TheilSenPlot2', label ="Plot type", selected= "Plot overall trend",choices= c("Plot overall trend", "Plot trend by month"))),
+
     br(),
 
     #downloadButton('downloadData', 'Download Data'),
